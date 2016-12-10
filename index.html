@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Remote-redux-devtools by grazies</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Remote-redux-devtools</h1>
+      <h2 class="project-tagline">Redux DevTools remotely.</h2>
+      <a href="https://github.com/grazies/remote-redux-devtools" class="btn">View on GitHub</a>
+      <a href="https://github.com/grazies/remote-redux-devtools/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/grazies/remote-redux-devtools/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="remote-redux-devtools" class="anchor" href="#remote-redux-devtools" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Remote Redux DevTools</h1>
+
+<p><img src="demo.gif" alt="Demo"></p>
+
+<p>Use <a href="https://github.com/gaearon/redux-devtools">Redux DevTools</a> remotely for React Native, hybrid, desktop and server side Redux apps.</p>
+
+<h3>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h3>
+
+<pre><code>npm install --save-dev remote-redux-devtools
+</code></pre>
+
+<h3>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h3>
+
+<p>There are 2 ways of usage depending if you're using other store enhancers (middlewares) or not.</p>
+
+<h4>
+<a id="add-devtools-enhancer-to-your-store" class="anchor" href="#add-devtools-enhancer-to-your-store" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Add DevTools enhancer to your store</h4>
+
+<p>If you have a basic <a href="http://redux.js.org/docs/api/createStore.html">store</a> as described in the official <a href="http://redux.js.org/index.html">redux-docs</a>, simply replace:</p>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">import</span> { <span class="pl-smi">createStore</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>redux<span class="pl-pds">'</span></span>;
+  <span class="pl-k">const</span> <span class="pl-c1">store</span> <span class="pl-k">=</span> <span class="pl-en">createStore</span>(reducer);</pre></div>
+
+<p>with</p>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">import</span> { <span class="pl-smi">createStore</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>redux<span class="pl-pds">'</span></span>;
+  <span class="pl-k">import</span> <span class="pl-smi">devToolsEnhancer</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>remote-redux-devtools<span class="pl-pds">'</span></span>;
+  <span class="pl-k">const</span> <span class="pl-c1">store</span> <span class="pl-k">=</span> <span class="pl-en">createStore</span>(reducer, <span class="pl-en">devToolsEnhancer</span>());
+  <span class="pl-c">// or const store = createStore(reducer, preloadedState, devToolsEnhancer());</span></pre></div>
+
+<blockquote>
+<p>Note: passing enhancer as last argument requires redux@&gt;=3.1.0</p>
+</blockquote>
+
+<h4>
+<a id="use-devtools-compose-helper" class="anchor" href="#use-devtools-compose-helper" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Use DevTools compose helper</h4>
+
+<p>If you setup your store with <a href="http://redux.js.org/docs/api/applyMiddleware.html">middleware and enhancers</a>, change this:</p>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">import</span> { <span class="pl-smi">createStore</span>, <span class="pl-smi">applyMiddleware</span>, <span class="pl-smi">compose</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>redux<span class="pl-pds">'</span></span>;
+
+  <span class="pl-k">const</span> <span class="pl-c1">store</span> <span class="pl-k">=</span> <span class="pl-en">createStore</span>(reducer, preloadedState, <span class="pl-en">compose</span>(
+    <span class="pl-en">applyMiddleware</span>(<span class="pl-k">...</span>middleware),
+    <span class="pl-c">// other store enhancers if any</span>
+  ));</pre></div>
+
+<p>to:</p>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">import</span> { <span class="pl-smi">createStore</span>, <span class="pl-smi">applyMiddleware</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>redux<span class="pl-pds">'</span></span>;
+  <span class="pl-k">import</span> { <span class="pl-smi">composeWithDevTools</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>remote-redux-devtools<span class="pl-pds">'</span></span>;
+
+  <span class="pl-k">const</span> <span class="pl-c1">store</span> <span class="pl-k">=</span> <span class="pl-en">createStore</span>(reducer, <span class="pl-c">/* preloadedState, */</span> <span class="pl-en">composeWithDevTools</span>(
+    <span class="pl-en">applyMiddleware</span>(<span class="pl-k">...</span>middleware),
+    <span class="pl-c">// other store enhancers if any</span>
+  ));</pre></div>
+
+<p>or with devTools' options:</p>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">import</span> { <span class="pl-smi">createStore</span>, <span class="pl-smi">applyMiddleware</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>redux<span class="pl-pds">'</span></span>;
+  <span class="pl-k">import</span> { <span class="pl-smi">composeWithDevTools</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>remote-redux-devtools<span class="pl-pds">'</span></span>;
+
+  <span class="pl-k">const</span> <span class="pl-c1">composeEnhancers</span> <span class="pl-k">=</span> <span class="pl-en">composeWithDevTools</span>({ realtime<span class="pl-k">:</span> <span class="pl-c1">true</span>, port<span class="pl-k">:</span> <span class="pl-c1">8000</span> });
+  <span class="pl-k">const</span> <span class="pl-c1">store</span> <span class="pl-k">=</span> <span class="pl-en">createStore</span>(reducer, <span class="pl-c">/* preloadedState, */</span> <span class="pl-en">composeEnhancers</span>(
+    <span class="pl-en">applyMiddleware</span>(<span class="pl-k">...</span>middleware),
+    <span class="pl-c">// other store enhancers if any</span>
+  ));</pre></div>
+
+<h4>
+<a id="important" class="anchor" href="#important" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Important</h4>
+
+<p>In order not to allow it in production by default, the enhancer will have effect only when <code>process.env.NODE_ENV === 'development'</code>. In case you don't set <code>NODE_ENV</code> or want to use it in production, set <code>realtime</code> parameter to <code>true</code>:</p>
+
+<div class="highlight highlight-source-js"><pre>  <span class="pl-k">const</span> <span class="pl-c1">store</span> <span class="pl-k">=</span> <span class="pl-en">createStore</span>(reducer, <span class="pl-en">devToolsEnhancer</span>({ realtime<span class="pl-k">:</span> <span class="pl-c1">true</span> }));</pre></div>
+
+<h3>
+<a id="monitoring" class="anchor" href="#monitoring" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Monitoring</h3>
+
+<p>Use one of our monitor apps to inspect and dispatch actions:</p>
+
+<ul>
+<li><a href="http://remotedev.io/local">web</a></li>
+<li>
+<a href="https://github.com/zalmoxisus/redux-devtools-extension">redux-devtools-extension</a> - Click "Remote" button (or press <a href="https://github.com/zalmoxisus/redux-devtools-extension#keyboard-shortcuts"><code>Cmd+Ctrl+Arrow up</code></a>) to open remote monitoring.</li>
+<li>
+<a href="https://github.com/jhen0409/react-native-debugger">react-native-debugger</a> - Electron app, which already includes <code>remotedev-server</code>, <code>remotedev-app</code> and even React DevTools.</li>
+<li>
+<a href="https://chrome.google.com/webstore/detail/remotedev/faicmgpfiaijcedapokpbdejaodbelph">chrome app</a>.</li>
+<li>
+<a href="https://github.com/jhen0409/remote-redux-devtools-on-debugger">remote-redux-devtools-on-debugger</a> - Used in React Native debugger as a dock monitor.</li>
+<li>
+<a href="https://github.com/zalmoxisus/atom-redux-devtools">atom-redux-devtools</a> - Used in Atom editor.</li>
+<li>
+<a href="https://github.com/jhen0409/redux-dispatch-cli">redux-dispatch-cli</a> - A CLI tool for Redux remote dispatch.</li>
+</ul>
+
+<p>Use <a href="https://github.com/zalmoxisus/remotedev-app">remotedev-app</a> to create your own monitor app.</p>
+
+<h3>
+<a id="communicate-via-local-server" class="anchor" href="#communicate-via-local-server" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Communicate via local server</h3>
+
+<p>In order to make it simple to use, by default, the module and the monitor app communicate via <a href="http://remotedev.io">remotedev.io</a> server. Use <a href="https://github.com/zalmoxisus/remotedev-server">remotedev-server</a> cli to run it locally in order to make the connection faster and not to require an internet connection.
+You can import it in your <code>server.js</code> script and start remotedev server together with your development server:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> remotedev <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>remotedev-server<span class="pl-pds">'</span></span>);
+<span class="pl-en">remotedev</span>({ hostname<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>localhost<span class="pl-pds">'</span></span>, port<span class="pl-k">:</span> <span class="pl-c1">8000</span> });</pre></div>
+
+<p>See <a href="https://github.com/zalmoxisus/remotedev-server">remotedev-server</a> repository for more details.
+For React Native you can use <a href="https://github.com/jhen0409/react-native-debugger">react-native-debugger</a> or <a href="https://github.com/jhen0409/remote-redux-devtools-on-debugger">remote-redux-devtools-on-debugger</a>, which already include <code>remotedev-server</code>.</p>
+
+<h3>
+<a id="parameters" class="anchor" href="#parameters" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Parameters</h3>
+
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>
+<em>String</em> representing the instance name to be shown on the remote monitor.</td>
+</tr>
+<tr>
+<td><code>realtime</code></td>
+<td>
+<em>Boolean</em> specifies whether to allow remote monitoring. By default is <code>process.env.NODE_ENV === 'development'</code>.</td>
+</tr>
+<tr>
+<td><code>hostname</code></td>
+<td>
+<em>String</em> used to specify host for <a href="https://github.com/zalmoxisus/remotedev-server"><code>remotedev-server</code></a>. If <code>port</code> is specified, default value is <code>localhost</code>.</td>
+</tr>
+<tr>
+<td><code>port</code></td>
+<td>
+<em>Number</em> used to specify host's port for <a href="https://github.com/zalmoxisus/remotedev-server"><code>remotedev-server</code></a>.</td>
+</tr>
+<tr>
+<td><code>secure</code></td>
+<td>
+<em>Boolean</em> specifies whether to use <code>https</code> protocol for <a href="https://github.com/zalmoxisus/remotedev-server"><code>remotedev-server</code></a>.</td>
+</tr>
+<tr>
+<td><code>maxAge</code></td>
+<td>
+<em>Number</em> of maximum allowed actions to be stored on the history tree, the oldest actions are removed once maxAge is reached. Default is <code>30</code>.</td>
+</tr>
+<tr>
+<td><code>actionsBlacklist</code></td>
+<td>
+<em>array</em> of actions to be hidden in DevTools. Overwrites corresponding global setting in the options page. See the example bellow.</td>
+</tr>
+<tr>
+<td><code>actionsWhitelist</code></td>
+<td>
+<em>array</em> of actions to be shown. All other actions will be hidden in DevTools.</td>
+</tr>
+<tr>
+<td><code>actionSanitizer</code></td>
+<td>
+<em>Function</em> which takes action object and id number as arguments, and should return action object back. See the example bellow.</td>
+</tr>
+<tr>
+<td><code>stateSanitizer</code></td>
+<td>
+<em>Function</em> which takes state object and index as arguments, and should return state object back. See the example bellow.</td>
+</tr>
+<tr>
+<td><code>startOn</code></td>
+<td>
+<em>String</em> or <em>Array of strings</em> indicating an action or a list of actions, which should start remote monitoring (when <code>realtime</code> is <code>false</code>).</td>
+</tr>
+<tr>
+<td><code>stopOn</code></td>
+<td>
+<em>String</em> or <em>Array of strings</em> indicating an action or a list of actions, which should stop remote monitoring.</td>
+</tr>
+<tr>
+<td><code>sendOn</code></td>
+<td>
+<em>String</em> or <em>Array of strings</em> indicating an action or a list of actions, which should trigger sending the history to the monitor (without starting it). <em>Note</em>: when using it, add a <code>fetch</code> polyfill if needed.</td>
+</tr>
+<tr>
+<td><code>sendOnError</code></td>
+<td>
+<em>Numeric</em> code: <code>0</code> - disabled (default), <code>1</code> - send all uncaught exception messages, <code>2</code> - send only reducers error messages.</td>
+</tr>
+<tr>
+<td><code>sendTo</code></td>
+<td>
+<em>String</em> url of the monitor to send the history when <code>sendOn</code> is triggered. By default is <code>${secure ? 'https' : 'http'}://${hostname}:${port}</code>.</td>
+</tr>
+<tr>
+<td><code>actionCreators</code></td>
+<td>
+<em>Array</em> or <em>Object</em> of action creators to dispatch remotely. See <a href="https://github.com/zalmoxisus/remote-redux-devtools/commit/b54652930dfd4e057991df8471c343957fd7bff7">the example</a>.</td>
+</tr>
+<tr>
+<td><code>shouldHotReload</code></td>
+<td>
+<em>Boolean</em> - if set to <code>false</code>, will not recompute the states on hot reloading (or on replacing the reducers). Default to <code>true</code>.</td>
+</tr>
+<tr>
+<td><code>shouldRecordChanges</code></td>
+<td>
+<em>Boolean</em> - if specified as <code>false</code>, it will not record the changes till clicked on "Start recording" button on the monitor app. Default is <code>true</code>.</td>
+</tr>
+<tr>
+<td><code>shouldStartLocked</code></td>
+<td>
+<em>Boolean</em> - if specified as <code>true</code>, it will not allow any non-monitor actions to be dispatched till <code>lockChanges(false)</code> is dispatched. Default is <code>false</code>.</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>
+<em>String</em> to identify the instance when sending the history triggered by <code>sendOn</code>. You can use, for example, user id here, to know who sent the data.</td>
+</tr>
+</tbody>
+</table>
+
+<p>All parameters are optional. You have to provide at least <code>port</code> property to use <code>localhost</code> instead of <code>remotedev.io</code> server.</p>
+
+<p>Example:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">export</span> <span class="pl-v">default</span> <span class="pl-k">function</span> <span class="pl-en">configureStore</span>(<span class="pl-smi">preloadedState</span>) {
+  <span class="pl-k">const</span> <span class="pl-c1">store</span> <span class="pl-k">=</span> <span class="pl-en">createStore</span>(
+    reducer,
+    preloadedState,
+    <span class="pl-en">devToolsEnhancer</span>({
+      name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Android app<span class="pl-pds">'</span></span>, realtime<span class="pl-k">:</span> <span class="pl-c1">true</span>,
+      hostname<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>localhost<span class="pl-pds">'</span></span>, port<span class="pl-k">:</span> <span class="pl-c1">8000</span>,
+      maxAge<span class="pl-k">:</span> <span class="pl-c1">30</span>, actionsBlacklist<span class="pl-k">:</span> [<span class="pl-s"><span class="pl-pds">'</span>EFFECT_RESOLVED<span class="pl-pds">'</span></span>],
+      <span class="pl-en">actionSanitizer</span><span class="pl-k">:</span> (<span class="pl-smi">action</span>) <span class="pl-k">=&gt;</span> (
+       <span class="pl-smi">action</span>.<span class="pl-c1">type</span> <span class="pl-k">===</span> <span class="pl-s"><span class="pl-pds">'</span>FILE_DOWNLOAD_SUCCESS<span class="pl-pds">'</span></span> <span class="pl-k">&amp;&amp;</span> <span class="pl-smi">action</span>.<span class="pl-c1">data</span> <span class="pl-k">?</span>
+       { <span class="pl-k">...</span>action, data<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;&lt;LONG_BLOB&gt;&gt;<span class="pl-pds">'</span></span> } <span class="pl-k">:</span> action
+      ),
+      <span class="pl-en">stateSanitizer</span><span class="pl-k">:</span> (<span class="pl-smi">state</span>) <span class="pl-k">=&gt;</span> <span class="pl-smi">state</span>.<span class="pl-c1">data</span> <span class="pl-k">?</span> { <span class="pl-k">...</span>state, data<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>&lt;&lt;LONG_BLOB&gt;&gt;<span class="pl-pds">'</span></span> } <span class="pl-k">:</span> state
+    })
+  );
+  <span class="pl-k">return</span> store;
+}</pre></div>
+
+<h3>
+<a id="demo" class="anchor" href="#demo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Demo</h3>
+
+<ul>
+<li><a href="http://zalmoxisus.github.io/monitoring/">Toggle monitoring</a></li>
+</ul>
+
+<h3>
+<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Examples</h3>
+
+<ul>
+<li><a href="https://github.com/zalmoxisus/remote-redux-devtools/tree/master/examples">Web</a></li>
+<li><a href="https://github.com/chentsulin/react-native-counter-ios-android">React Native</a></li>
+</ul>
+
+<h3>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h3>
+
+<p>MIT</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/grazies/remote-redux-devtools">Remote-redux-devtools</a> is maintained by <a href="https://github.com/grazies">grazies</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
